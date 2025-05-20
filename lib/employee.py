@@ -17,8 +17,8 @@ class Employee:
         return (
             f"<Employee {self.id}: {self.name}, {self.job_title}, " +
             f"Department ID: {self.department_id}>"
-        )
 
+        )
     @property
     def name(self):
         return self._name
@@ -186,5 +186,12 @@ class Employee:
         return cls.instance_from_db(row) if row else None
 
     def reviews(self):
+        from review import Review
+
         """Return list of reviews associated with current employee"""
-        pass
+        sql = """SELECT * FROM reviews
+        WHERE employee_id = ?
+        """
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Review.instance_from_db(row) for row in rows]
